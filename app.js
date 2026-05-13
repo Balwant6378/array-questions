@@ -17,15 +17,15 @@ const arrays = [
 function getMaXAgePerson(arrays){
     let max = 0;
     let empty;
+    if(arrays == []){
+        return null;
+    }
     for(let i = 0; i < arrays.length; i++){
        if(max < arrays[i].age ){
         max = arrays[i].age;
-       }else if(arrays == []){
-         return null;
-       }else{
-        return max;
-       }
+       } 
     }
+    return max;
 }
 
 for(let i = 0; i < arrays.length; i++){
@@ -42,20 +42,38 @@ const arr = [
     "apple banana",
     "banana orange apple", 
     "orange banana", 
-    "grape apple"
+    "guava apple"
 ];
-let finalArr = [];
-for( let i = 0; i < arr.length; i++){
-    str = arr[i];
-    finalArr = str.split(" ");
-    console.log(finalArr);
+function processData(arr){
+    let finalArr = [];
+    for( let i = 0; i < arr.length; i++){
+    let str = arr[i];
+    let words = str.split(" ");
+    finalArr.push(...words);
 }
+console.log(finalArr);
+let shortedWords = [...new Set(finalArr)];
+console.log(shortedWords);
 
-
-// function processData(arr){
-   
-// }
-// processData(arr)
+let countObj = {};
+for( let word of finalArr){
+    if (countObj[word]){
+        countObj[word]++;
+    }else{
+        countObj[word] = 1;
+    }
+}
+let uniqueWords = [];
+for(let key in countObj){
+    if (countObj[key] === 1){
+        uniqueWords.push(key);
+    }
+}
+console.log(uniqueWords);
+let finalOutput = {shortedWords, uniqueWords};
+console.log(finalOutput);
+}
+processData(arr);
 
 //Write a JavaScript function that fetches posts from the API:
 
@@ -66,24 +84,26 @@ const getProcessedPosts = async () => {
     let data = await response.json();
     let totalNumPost = {data};
     console.log(totalNumPost);// print object total 
-    let arr = totalNumPost.data;
+    let arr = data;
     console.log(arr)// print array
-    let str = "";
     let newArr = [];
     for(let i = 0; i < arr.length; i++){
-         str = arr[i].title.split(""); //  
-         if(str.length > 30){
-            newArr = arr[i].title;
-            console.log(newArr);
-         }
-    }
-    let count = 0;
-    for(let i = 0; i < arr.length; i++){
-        if(arr[i].userId == 1){
-            count += (arr[i].userId);
+        if(arr[i].title.length > 30){
+            newArr.push(arr[i].title);
         }
     }
-    console.log(`userId:1 post count is.${count}`);
-
+    let countObj = {};
+    for(let i = 0; i < arr.length; i++){
+        let id = arr[i].userId;
+        if(countObj[id]){
+            (countObj[id]++);
+        }else{
+            countObj[id] = 1;
+        }
+    }
+    console.log(countObj);
+    for(let key in countObj){
+        console.log(`user ID ${key} post count is ${countObj[key]}`)
+    }
 }
 getProcessedPosts();
